@@ -335,32 +335,32 @@
 
         <div class="field-grid">
           <div class="field">
-            <label for="lengthSite">場地長度 (mm)</label>
+            <label for="lengthSite">場地長度（毫米）</label>
             <input type="number" id="lengthSite" value="9005" min="100" step="1" inputmode="numeric" aria-describedby="lengthSite-hint">
             <span class="hint" id="lengthSite-hint">施工範圍總長</span>
           </div>
           <div class="field">
-            <label for="lengthBoard">地板長度 (mm)</label>
+            <label for="lengthBoard">地板長度（毫米）</label>
             <input type="number" id="lengthBoard" value="3000" min="100" step="1" inputmode="numeric" aria-describedby="lengthBoard-hint">
             <span class="hint" id="lengthBoard-hint">單片地板長</span>
           </div>
           <div class="field">
-            <label for="widthJoist">龍骨闊度 (mm)</label>
+            <label for="widthJoist">龍骨闊度（毫米）</label>
             <input type="number" id="widthJoist" value="45" min="10" step="1" inputmode="numeric" aria-describedby="widthJoist-hint">
             <span class="hint" id="widthJoist-hint">單條龍骨寬</span>
           </div>
           <div class="field">
-            <label for="maxSpacing">最大間距 (mm)</label>
+            <label for="maxSpacing">最大間距（毫米）</label>
             <input type="number" id="maxSpacing" value="400" min="100" step="10" inputmode="numeric" aria-describedby="maxSpacing-hint">
             <span class="hint" id="maxSpacing-hint">龍骨最大中心距</span>
           </div>
           <div class="field">
-            <label for="edgeOffset">邊緣偏移 (mm)</label>
+            <label for="edgeOffset">邊緣偏移（毫米）</label>
             <input type="number" id="edgeOffset" value="5" min="0" step="1" inputmode="numeric" aria-describedby="edgeOffset-hint">
             <span class="hint" id="edgeOffset-hint">首條龍骨距邊</span>
           </div>
           <div class="field">
-            <label for="boardGap">板間隙 (mm)</label>
+            <label for="boardGap">板間隙（毫米）</label>
             <input type="number" id="boardGap" value="5" min="0" step="1" inputmode="numeric" aria-describedby="boardGap-hint">
             <span class="hint" id="boardGap-hint">板與板之間隙</span>
           </div>
@@ -542,9 +542,9 @@
             '<th>龍骨 #</th>' +
             '<th>板 #</th>' +
             '<th>段 #</th>' +
-            '<th>左 (mm)</th>' +
-            '<th>中心 (mm)</th>' +
-            '<th>右 (mm)</th>' +
+            '<th>左（毫米）</th>' +
+            '<th>中心（毫米）</th>' +
+            '<th>右（毫米）</th>' +
           '</tr></thead>' +
           '<tbody>' + tbody + '</tbody>' +
         '</table>';
@@ -558,7 +558,7 @@
 
     function copyCSV() {
       if (!lastRows.length) return;
-      const header = "龍骨 #,板 #,段 #,左 (mm),中心 (mm),右 (mm),接縫";
+      const header = "龍骨 #,板 #,段 #,左（毫米）,中心（毫米）,右（毫米）,接縫";
       const lines = lastRows.map(function(r) {
         return [r.number, r.boardIndex, r.segIndex, r.left, r.center, r.right, r.isJoint ? "★" : ""].join(",");
       });
