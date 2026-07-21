@@ -1,6 +1,6 @@
 # Joist Layout Calculator (龍骨佈局計算器)
 
-[![Calculator Suite](https://img.shields.io/badge/Calculator%20Suite-Joist%20Layout-38BDF8?style=flat-square)](https://github.com/Jupiterlaw/calculator-suite)
+[![Calculator Suite](https://img.shields.io/badge/Calculator%20Suite-Joist%20Layout-01696F?style=flat-square)](https://github.com/Jupiterlaw/calculator-suite)
 
 龍骨（Joist）佈局計算器 — 根據地板長度、最大間距與邊距，自動計算每條龍骨的準確位置。
 
