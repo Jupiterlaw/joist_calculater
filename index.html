@@ -1,408 +1,463 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>龍骨佈局計算器</title>
+  <title>Joist Layout Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <style>
     :root {
-      --bg: #f4f1ec;
-      --surface: #ffffff;
-      --surface-muted: #faf8f5;
-      --border: #e2ddd4;
-      --border-strong: #cfc7ba;
-      --text: #2c2926;
-      --text-muted: #6b6560;
-      --accent: #2d5a4a;
-      --accent-hover: #234839;
-      --accent-soft: #e8f0ec;
-      --danger: #9b3b32;
-      --danger-soft: #fbeae8;
-      --highlight: #c4a574;
-      --shadow-sm: 0 2px 8px rgba(44, 41, 38, 0.06);
-      --shadow: 0 4px 24px rgba(44, 41, 38, 0.08);
-      --radius: 14px;
-      --radius-sm: 10px;
-      --font: "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1a1917;
-        --surface: #242322;
-        --surface-muted: #2a2928;
-        --border: #3a3632;
-        --border-strong: #4a4540;
-        --text: #e8e4df;
-        --text-muted: #9b9590;
-        --accent: #4a8c73;
-        --accent-hover: #3d7962;
-        --accent-soft: rgba(74, 140, 115, 0.2);
-        --danger: #c45b52;
-        --danger-soft: rgba(196, 91, 82, 0.25);
-        --highlight: #d4b88a;
-        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-        --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-      }
+      --bg: #0f172a;
+      --primary: #01696F;
+      --primary-soft: rgba(1,105,111,0.15);
+      --accent: #fbbf24;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+      --success: #4ade80;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: var(--font);
-      font-size: 16px;
-      line-height: 1.55;
-      color: var(--text);
-      background: var(--bg);
+      padding: clamp(1rem, 4vw, 2rem);
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+      -webkit-text-size-adjust: 100%;
     }
 
-    .app {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 1.5rem 1.25rem 3rem;
+    .app-shell {
+          max-width: 480px;
+          margin: 0 auto;
+        }
+
+
+
+    .panel {
+      background: linear-gradient(135deg, #020617, #020617 40%, #020617 60%, #020617);
+      border-radius: clamp(12px, 2vw, 16px);
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.9), 0 0 0 1px rgba(15,23,42,0.9);
+      padding: clamp(14px, 2.5vw, 20px);
+      position: relative;
+      overflow: hidden;
     }
 
-    .header { margin-bottom: 1.5rem; }
-    .header h1 {
-      margin: 0 0 0.4rem;
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-    .header p {
-      margin: 0;
-      max-width: 40em;
-      color: var(--text-muted);
-      font-size: 0.95rem;
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      background:
+        radial-gradient(circle at 0 0, rgba(1,105,111,0.08), transparent 60%),
+        radial-gradient(circle at 100% 0, rgba(236,72,153,0.06), transparent 60%);
+      opacity: 0.75;
+      pointer-events: none;
     }
 
-    .app-grid {
-      display: grid;
-      grid-template-columns: minmax(320px, 400px) 1fr;
-      gap: 1.25rem;
-      align-items: start;
-    }
-    @media (max-width: 960px) {
-      .app-grid { grid-template-columns: 1fr; }
-      .app { padding: 1.25rem 1rem 2.5rem; }
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      padding: 1.35rem 1.5rem;
-    }
-
-    .card-title {
-      margin: 0 0 1.1rem;
-      font-size: 1.05rem;
-      font-weight: 650;
+    .panel-header {
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-    }
-    .card-title::before {
-      content: "";
-      width: 4px;
-      height: 1.1em;
-      background: var(--accent);
-      border-radius: 2px;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
     }
 
-    .formula {
-      font-size: 0.85rem;
+    .panel-header h1 {
+          margin: 0;
+          font-size: clamp(1rem, 3vw, 1.25rem);
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: #e5e7eb;
+        }
+
+    .badge {
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(1,105,111,0.15);
+      color: var(--primary);
+      border: 1px solid rgba(1,105,111,0.6);
+      white-space: nowrap;
+    }
+
+    .subtext {
+      position: relative;
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
-      background: var(--surface-muted);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.6rem 0.75rem;
-      margin-bottom: 1.1rem;
+      margin-bottom: 14px;
       line-height: 1.5;
-      overflow-x: auto;
+      word-break: break-all;
     }
 
-    .field-grid {
+    .grid-2 {
+      position: relative;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    @media (max-width: 480px) {
-      .field-grid { grid-template-columns: 1fr; }
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(8px, 1.5vw, 14px);
+      margin-top: 4px;
     }
 
-    .field { display: flex; flex-direction: column; gap: 0.35rem; }
-    .field label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text);
+    @media (max-width: 480px) {
+      .grid-2 { grid-template-columns: 1fr; }
     }
-    .field .hint {
-      font-size: 0.75rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    label span {
+      color: var(--primary);
+      font-size: 0.875rem;
+      margin-left: 4px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #020617;
+      border-radius: 999px;
+      padding: clamp(6px, 1.2vw, 10px) clamp(10px, 2vw, 14px);
+      border: 1px solid rgba(51,65,85,0.9);
+      min-height: 44px;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(1,105,111,0.4);
+    }
+
+    .input-prefix {
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     input[type="number"] {
-      width: 100%;
-      min-height: 48px;
-      padding: 0.6rem 0.75rem;
-      font: inherit;
-      font-size: 1rem;
-      color: var(--text);
-      background: var(--surface-muted);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-    input:hover { border-color: var(--border-strong); }
-    input:focus {
+      flex: 1;
+      border: none;
       outline: none;
-      border-color: var(--accent);
-      background: var(--surface);
-      box-shadow: 0 0 0 3px var(--accent-soft);
+      background: transparent;
+      color: var(--text-main);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
+      padding: 4px 0;
+      min-width: 0;
+      font-family: inherit;
     }
-    input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    input[type="number"]::placeholder { color: #4b5563; }
 
     .btn-row {
+      position: relative;
+      margin-top: 16px;
       display: flex;
-      gap: 0.75rem;
-      margin-top: 1.25rem;
+      justify-content: flex-end;
+      gap: 8px;
       flex-wrap: wrap;
     }
-    .btn {
+
+    .btn-primary,
+    .btn-secondary {
+      position: relative;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      min-height: 48px;
-      padding: 0.6rem 1.1rem;
-      font: inherit;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border-radius: var(--radius-sm);
-      border: 1px solid transparent;
+      gap: 8px;
+      padding: clamp(10px, 1.8vw, 12px) clamp(16px, 3vw, 20px);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
+      border-radius: 999px;
+      border: none;
       cursor: pointer;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-family: inherit;
+      min-height: 44px;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
-    .btn:active { transform: scale(0.98); }
-    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-primary {
+      color: #0f172a;
+      background: linear-gradient(135deg, #01696F, #0C4E54);
+      box-shadow: 0 12px 24px rgba(1,105,111,0.35), 0 0 0 1px rgba(15,23,42,0.8);
+    }
+
     .btn-secondary {
-      background: var(--surface-muted);
-      color: var(--text);
-      border-color: var(--border);
+      color: var(--text-main);
+      background: rgba(51,65,85,0.6);
+      border: 1px solid rgba(148,163,184,0.3);
     }
-    .btn-secondary:hover { background: var(--surface); border-color: var(--border-strong); }
-    .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
-    @media (max-width: 480px) {
-      .btn-row { flex-direction: column; }
-      .btn { width: 100%; }
+
+    .btn-primary:hover,
+    .btn-secondary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-primary:active,
+    .btn-secondary:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(1,105,111,0.25), 0 0 0 1px rgba(15,23,42,0.8);
     }
 
     .pill-stats {
+      position: relative;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1.1rem;
+      gap: clamp(4px, 0.8vw, 6px);
+      margin-top: 12px;
     }
-    .pill {
-      font-size: 0.82rem;
-      border-radius: 999px;
-      padding: 0.35rem 0.7rem;
-      border: 1px solid var(--border);
-      background: var(--surface-muted);
-      color: var(--text-muted);
-    }
-    .pill strong { color: var(--accent); font-weight: 700; }
-    .pill.warn strong { color: var(--danger); }
 
-    .error {
-      color: var(--danger);
-      font-size: 0.85rem;
-      margin-top: 0.9rem;
-      padding: 0.6rem 0.75rem;
-      background: var(--danger-soft);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--danger-soft);
+    .pill {
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.95);
+      color: var(--text-muted);
+      white-space: nowrap;
     }
+
+    .pill strong { color: var(--primary); font-weight: 600; }
+    .pill.ok strong { color: var(--success); }
+    .pill.warn strong { color: var(--accent); }
+
+    .panel-results { background: rgba(15,23,42,0.9); }
 
     .table-wrap {
-      margin-top: 0.5rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      position: relative;
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(31,41,55,0.9);
+      background: radial-gradient(circle at top, rgba(15,23,42,0.9), #020617);
+      max-height: clamp(360px, 60vh, 540px);
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
+
     .table-header {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      gap: 0.75rem;
-      padding: 0.75rem 1rem 0.6rem;
-      border-bottom: 1px solid var(--border);
+      padding: 8px 12px 6px;
+      border-bottom: 1px solid rgba(31,41,55,0.9);
+      gap: 8px;
       flex-wrap: wrap;
     }
-    .table-header-meta { font-size: 0.82rem; color: var(--text-muted); }
+
+    .table-header-title {
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .table-header-meta {
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+          color: var(--text-muted);
+        }
+
     .table-scroll {
       overflow: auto;
       -webkit-overflow-scrolling: touch;
-      max-height: clamp(360px, 60vh, 560px);
+      flex: 1;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
-      min-width: 460px;
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      min-width: 480px;
     }
+
     th, td {
-      padding: 0.65rem 0.85rem;
+      padding: clamp(6px, 1vw, 8px) clamp(8px, 1.5vw, 10px);
       text-align: right;
       white-space: nowrap;
-      font-variant-numeric: tabular-nums;
     }
+
     th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: var(--surface-muted);
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-      font-size: 0.82rem;
-    }
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background: #020617;
+          color: var(--text-muted);
+          border-bottom: 1px solid rgba(31,41,55,0.9);
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+        }
+
     th:first-child, td:first-child { text-align: left; }
-    tbody tr:nth-child(even) { background: var(--surface-muted); }
-    tr.highlight { background: var(--accent-soft) !important; }
-    tr.highlight td { color: var(--accent); font-weight: 700; }
+
+    tbody tr:nth-child(even) { background: rgba(15,23,42,0.9); }
+    tbody tr:nth-child(odd) { background: rgba(2,6,23,0.95); }
+
+    tr.highlight { background: rgba(251,191,36,0.12) !important; }
+    tr.highlight td { color: #e5e7eb; font-weight: 500; }
     tr.highlight td:first-child::before { content: "★ "; color: var(--accent); }
 
     .summary-footer {
-      padding: 0.7rem 1rem 0.85rem;
-      border-top: 1px solid var(--border);
+      padding: 8px 12px 10px;
+      border-top: 1px solid rgba(31,41,55,0.9);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.75rem;
-      font-size: 0.82rem;
+      gap: 8px;
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       color: var(--text-muted);
       flex-wrap: wrap;
     }
-    .summary-footer .key { color: var(--accent); font-weight: 700; }
-    .summary-footer .value { color: var(--text); }
+
+    .summary-footer span.key { color: var(--primary); }
+    .summary-footer span.value { color: #e5e7eb; }
+    .summary-footer .hint { font-size: 0.75rem; opacity: 0.8; }
 
     .empty-state {
-      font-size: 0.9rem;
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
-      padding: 1.5rem 1rem;
+      padding: clamp(12px, 2vw, 20px);
       text-align: center;
     }
 
-    .sr-only {
-      position: absolute;
-      width: 1px; height: 1px;
-      padding: 0; margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
+    .error {
+      color: var(--danger);
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: rgba(249,115,115,0.08);
+      border-radius: 8px;
+      border: 1px solid rgba(249,115,115,0.3);
     }
 
-    @media print {
-      body { background: #fff; }
-      .btn, .formula { display: none; }
-      .card, .table-wrap { box-shadow: none; border: 1px solid #ccc; }
-      th { background: #f0f0f0; }
+    @media (max-width: 480px) {
+      .btn-row { justify-content: stretch; }
+      .btn-row button { flex: 1; justify-content: center; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="header">
-      <h1>龍骨佈局計算器</h1>
-      <p>輸入場地與地板參數，自動計算每條龍骨的中心 / 左 / 右位置，並標示靠近板端接縫的龍骨。</p>
-    </header>
+  <div class="app-shell">
 
-    <main class="app-grid">
-      <section class="card" aria-labelledby="input-heading">
-        <h2 class="card-title" id="input-heading">參數</h2>
-        <div class="formula" aria-hidden="true">
-          中心(m,k) = (段長 × k + 邊緣偏移) + m × (地板長度 + 板間隙)
-        </div>
+    <!-- Left: Controls -->
+    <div class="panel">
+      <div class="panel-header">
+        <h1>Joist Layout Calculator</h1>
+        <span class="badge">Formula Mode</span>
+      </div>
+      <div class="subtext">
+        center(m,k) = (segmentLength × k + edgeOffset) + m × (boardLength + gap)
+      </div>
 
-        <div class="field-grid">
-          <div class="field">
-            <label for="lengthSite">場地長度（毫米）</label>
-            <input type="number" id="lengthSite" value="9005" min="100" step="1" inputmode="numeric" aria-describedby="lengthSite-hint">
-            <span class="hint" id="lengthSite-hint">施工範圍總長</span>
-          </div>
-          <div class="field">
-            <label for="lengthBoard">地板長度（毫米）</label>
-            <input type="number" id="lengthBoard" value="3000" min="100" step="1" inputmode="numeric" aria-describedby="lengthBoard-hint">
-            <span class="hint" id="lengthBoard-hint">單片地板長</span>
-          </div>
-          <div class="field">
-            <label for="widthJoist">龍骨闊度（毫米）</label>
-            <input type="number" id="widthJoist" value="45" min="10" step="1" inputmode="numeric" aria-describedby="widthJoist-hint">
-            <span class="hint" id="widthJoist-hint">單條龍骨寬</span>
-          </div>
-          <div class="field">
-            <label for="maxSpacing">最大間距（毫米）</label>
-            <input type="number" id="maxSpacing" value="400" min="100" step="10" inputmode="numeric" aria-describedby="maxSpacing-hint">
-            <span class="hint" id="maxSpacing-hint">龍骨最大中心距</span>
-          </div>
-          <div class="field">
-            <label for="edgeOffset">邊緣偏移（毫米）</label>
-            <input type="number" id="edgeOffset" value="5" min="0" step="1" inputmode="numeric" aria-describedby="edgeOffset-hint">
-            <span class="hint" id="edgeOffset-hint">首條龍骨距邊</span>
-          </div>
-          <div class="field">
-            <label for="boardGap">板間隙（毫米）</label>
-            <input type="number" id="boardGap" value="5" min="0" step="1" inputmode="numeric" aria-describedby="boardGap-hint">
-            <span class="hint" id="boardGap-hint">板與板之間隙</span>
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="lengthSite">Site length <span>(mm)</span></label>
+          <div class="input-wrapper">
+            <span class="input-prefix">L</span>
+            <input type="number" id="lengthSite" value="9005" min="100" step="1" inputmode="numeric" />
           </div>
         </div>
 
-        <div class="btn-row">
-          <button type="button" class="btn btn-secondary" onclick="copyCSV()" id="btnCopy" disabled>
-            複製 CSV
-          </button>
-          <button type="button" class="btn btn-primary" onclick="calculate()">
-            計算
-          </button>
-        </div>
-
-        <div id="pillStats" class="pill-stats"></div>
-        <div id="errorBox" class="error" style="display:none;" role="alert"></div>
-      </section>
-
-      <section class="card" aria-labelledby="result-heading">
-        <h2 class="card-title" id="result-heading">龍骨位置</h2>
-        <div class="table-wrap">
-          <div class="table-header">
-            <span class="table-header-meta" id="tableMeta">輸入參數後自動計算</span>
-          </div>
-          <div id="tableContainer" class="table-scroll">
-            <div class="empty-state">請在左側輸入參數，結果會即時更新。</div>
-          </div>
-          <div class="summary-footer">
-            <div>
-              <span class="key">★</span>
-              <span class="value"> 板端接縫</span><br>
-              <span>靠近板端接縫的龍骨已標示</span>
-            </div>
-            <div id="footerInfo"></div>
+        <div class="form-group">
+          <label for="lengthBoard">Board length <span>(mm)</span></label>
+          <div class="input-wrapper">
+            <span class="input-prefix">B</span>
+            <input type="number" id="lengthBoard" value="3000" min="100" step="1" inputmode="numeric" />
           </div>
         </div>
-      </section>
-    </main>
+
+        <div class="form-group">
+          <label for="widthJoist">Joist width <span>(mm)</span></label>
+          <div class="input-wrapper">
+            <span class="input-prefix">W</span>
+            <input type="number" id="widthJoist" value="45" min="10" step="1" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="maxSpacing">Max spacing <span>(mm)</span></label>
+          <div class="input-wrapper">
+            <span class="input-prefix">≤</span>
+            <input type="number" id="maxSpacing" value="400" min="100" step="10" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edgeOffset">Edge offset <span>(mm)</span></label>
+          <div class="input-wrapper">
+            <span class="input-prefix">↔</span>
+            <input type="number" id="edgeOffset" value="5" min="0" step="1" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="boardGap">Board gap <span>(mm)</span></label>
+          <div class="input-wrapper">
+            <span class="input-prefix">␣</span>
+            <input type="number" id="boardGap" value="5" min="0" step="1" inputmode="numeric" />
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="copyCSV()" id="btnCopy" disabled>
+          <span>📋 Copy CSV</span>
+        </button>
+        <button class="btn-primary" onclick="calculate()">
+          <span>▶ Calculate</span>
+        </button>
+      </div>
+
+      <div id="pillStats" class="pill-stats"></div>
+      <div id="errorBox" class="error" style="display:none;"></div>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="panel panel-results">
+      <div class="panel-header">
+        <div class="panel-header-title">Layout Table</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header">
+          <div class="table-header-title">Joist Positions</div>
+          <div class="table-header-meta" id="tableMeta">Press "Calculate" to generate</div>
+        </div>
+        <div id="tableContainer" class="table-scroll">
+          <div class="empty-state">請喺左側輸入參數，撳「Calculate」生成龍骨佈局。</div>
+        </div>
+        <div class="summary-footer">
+          <div>
+            <span class="key">★</span>
+            <span class="value"> Board Joint</span><br>
+            <span class="hint">joists near board ends highlighted</span>
+          </div>
+          <div id="footerInfo"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
     const MAX_BOARDS = 200;
+
     let lastRows = [];
 
     function $(id) { return document.getElementById(id); }
@@ -431,23 +486,23 @@
 
       const inputs = [lengthSite, lengthBoard, widthJoist, maxSpacing, edgeOffset, boardGap];
       if (inputs.some(v => isNaN(v) || v < 0)) {
-        showError("請輸入所有欄位的有效數值（≥ 0）。");
+        showError("請輸入所有欄位嘅有效數值（≥ 0）。");
         tableContainer.innerHTML = "<div class='empty-state'>輸入不完整。</div>";
-        tableMeta.textContent = "輸入無效";
+        tableMeta.textContent = "Invalid input";
         return;
       }
 
       if (lengthSite <= 0 || lengthBoard <= 0 || widthJoist <= 0 || maxSpacing <= 0) {
-        showError("場地長度 / 地板長度 / 龍骨闊度 / 最大間距必須大於 0。");
+        showError("L / B / W / Max spacing 必須大於 0。");
         tableContainer.innerHTML = "<div class='empty-state'>參數必須為正數。</div>";
-        tableMeta.textContent = "輸入無效";
+        tableMeta.textContent = "Invalid input";
         return;
       }
 
       if (widthJoist >= lengthBoard) {
-        showError("龍骨闊度不能大於或等於地板長度。");
+        showError("Joist width 不能大於或等於 floorboard length。");
         tableContainer.innerHTML = "<div class='empty-state'>龍骨闊度異常。</div>";
-        tableMeta.textContent = "參數異常";
+        tableMeta.textContent = "Invalid config";
         return;
       }
 
@@ -484,41 +539,41 @@
       }
 
       if (m >= MAX_BOARDS) {
-        showError("超過最大板數量上限（" + MAX_BOARDS + "），請檢查參數。");
+        showError("超過最大 board 數量上限（" + MAX_BOARDS + "），請檢查參數。");
       }
 
       if (!rows.length) {
         tableContainer.innerHTML = "<div class='empty-state'>場地長度不足以放置任何龍骨。</div>";
-        tableMeta.textContent = "無龍骨";
+        tableMeta.textContent = "No joists";
         return;
       }
 
       lastRows = rows;
       renderTable(rows);
-      tableMeta.textContent = rows.length + " 條龍骨 · " + m + " 塊板";
+      tableMeta.textContent = rows.length + " joists · " + m + " boards";
 
       const spacingOk = segmentLength <= maxSpacing + 1e-9;
       const jointCount = rows.filter(r => r.isJoint).length;
 
       pillStats.innerHTML =
-        '<div class="pill ' + (spacingOk ? "" : "warn") + '">' +
-          '<span>段長</span> <strong>' + segmentLength.toFixed(1) + ' mm</strong> (n=' + nSeg + ')' +
+        '<div class="pill ' + (spacingOk ? "ok" : "warn") + '">' +
+          '<span>Segment</span> <strong>' + segmentLength.toFixed(1) + ' mm</strong> (n=' + nSeg + ')' +
         '</div>' +
         '<div class="pill">' +
-          '<span>最大</span> <strong>' + maxSpacing.toFixed(0) + ' mm</strong>' +
+          '<span>Max</span> <strong>' + maxSpacing.toFixed(0) + ' mm</strong>' +
         '</div>' +
         '<div class="pill">' +
-          '<span>龍骨</span> <strong>' + rows.length + '</strong>' +
+          '<span>Joists</span> <strong>' + rows.length + '</strong>' +
         '</div>' +
         '<div class="pill">' +
-          '<span>板</span> <strong>' + m + '</strong>' +
+          '<span>Boards</span> <strong>' + m + '</strong>' +
         '</div>' +
         '<div class="pill">' +
-          '<span>接縫 ★</span> <strong>' + jointCount + '</strong>' +
+          '<span>Joints ★</span> <strong>' + jointCount + '</strong>' +
         '</div>';
 
       footerInfo.innerHTML =
-        '<span class="key">段長</span> ' +
+        '<span class="key">Segment</span> ' +
         '<span class="value">' + segmentLength.toFixed(2) + ' mm</span>';
 
       btnCopy.disabled = false;
@@ -539,12 +594,12 @@
       $("tableContainer").innerHTML =
         '<table>' +
           '<thead><tr>' +
-            '<th>龍骨 #</th>' +
-            '<th>板 #</th>' +
-            '<th>段 #</th>' +
-            '<th>左（毫米）</th>' +
-            '<th>中心（毫米）</th>' +
-            '<th>右（毫米）</th>' +
+            '<th>Joist #</th>' +
+            '<th>Board #</th>' +
+            '<th>Seg #</th>' +
+            '<th>Left (mm)</th>' +
+            '<th>Center (mm)</th>' +
+            '<th>Right (mm)</th>' +
           '</tr></thead>' +
           '<tbody>' + tbody + '</tbody>' +
         '</table>';
@@ -558,7 +613,7 @@
 
     function copyCSV() {
       if (!lastRows.length) return;
-      const header = "龍骨 #,板 #,段 #,左（毫米）,中心（毫米）,右（毫米）,接縫";
+      const header = "Joist #,Board #,Seg #,Left (mm),Center (mm),Right (mm),Joint";
       const lines = lastRows.map(function(r) {
         return [r.number, r.boardIndex, r.segIndex, r.left, r.center, r.right, r.isJoint ? "★" : ""].join(",");
       });
@@ -568,7 +623,7 @@
         navigator.clipboard.writeText(csv).then(function() {
           const btn = $("btnCopy");
           const orig = btn.innerHTML;
-          btn.innerHTML = "已複製 ✓";
+          btn.innerHTML = "<span>✅ Copied!</span>";
           setTimeout(function() { btn.innerHTML = orig; }, 1500);
         }).catch(function() {
           fallbackCopy(csv);
@@ -590,22 +645,15 @@
       try {
         document.execCommand("copy");
         const btn = $("btnCopy");
-        btn.innerHTML = "已複製 ✓";
-        setTimeout(function() { btn.innerHTML = "複製 CSV"; }, 1500);
+        btn.innerHTML = "<span>✅ Copied!</span>";
+        setTimeout(function() { btn.innerHTML = "<span>📋 Copy CSV</span>"; }, 1500);
       } catch (e) {
-        alert("複製失敗，請手動選取複製。");
+        alert("Copy failed. Please select and copy manually.");
       }
       document.body.removeChild(ta);
     }
 
-    // Live recompute on input (no button needed to see a result).
-    ["lengthSite", "lengthBoard", "widthJoist", "maxSpacing", "edgeOffset", "boardGap"]
-      .forEach(function(id) {
-        $(id).addEventListener("input", calculate);
-      });
-
-    if (document.readyState !== "loading") calculate();
-    else document.addEventListener("DOMContentLoaded", calculate);
+    window.addEventListener("DOMContentLoaded", calculate);
   </script>
 </body>
 </html>
