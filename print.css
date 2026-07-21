@@ -1,0 +1,6 @@
+@media print {
+  body { background: #fff; }
+  .btn, .formula { display: none; }
+  .card, .table-wrap { box-shadow: none; border: 1px solid #ccc; }
+  th { background: #f0f0f0; }
+}
