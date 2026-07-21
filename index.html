@@ -1,658 +1,222 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>Joist Layout Calculator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>龍骨佈局計算器</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --primary: #01696F;
-      --primary-soft: rgba(1,105,111,0.15);
-      --accent: #fbbf24;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --border: #1f2937;
-      --danger: #f97373;
-      --success: #4ade80;
+      --bg: #f4f1ec; --surface: #fff; --surface-2: #faf8f5;
+      --border: #e2ddd4; --border-focus: #2d5a4a;
+      --text: #2c2926; --text-muted: #6b6560; --text-faint: #9b9590;
+      --accent: #2d5a4a; --accent-hover: #234839; --accent-soft: rgba(45,90,74,.12);
+      --danger: #9b3b32; --danger-soft: rgba(155,59,50,.1);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.06); --shadow-md: 0 4px 20px rgba(0,0,0,.08);
+      --radius: 12px; --radius-sm: 8px;
+      --font: system-ui,-apple-system,"Segoe UI","PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;
     }
-
-    *, *::before, *::after { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: clamp(1rem, 4vw, 2rem);
-      background: radial-gradient(circle at top, #1f2937, #020617);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text-main);
-      -webkit-text-size-adjust: 100%;
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1917; --surface: #242322; --surface-2: #2a2928;
+        --border: #3a3632; --border-focus: #4a8c73;
+        --text: #e8e4df; --text-muted: #9b9590; --text-faint: #6b6965;
+        --accent: #4a8c73; --accent-hover: #3d7962; --accent-soft: rgba(74,140,115,.15);
+        --danger: #c45b52; --danger-soft: rgba(196,91,82,.15);
+        --shadow-sm: 0 2px 8px rgba(0,0,0,.3); --shadow-md: 0 4px 20px rgba(0,0,0,.4);
+      }
     }
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:var(--font);font-size:16px;line-height:1.55;color:var(--text);background:var(--bg)}
 
-    .app-shell {
-          max-width: 480px;
-          margin: 0 auto;
-        }
+    .app{max-width:480px;margin:0 auto;padding:1.25rem 1rem 2rem}
 
+    .header{text-align:center;margin-bottom:1.5rem}
+    .header h1{margin:0 0 .25rem;font-size:1.5rem;font-weight:700}
+    .header p{margin:0;font-size:.95rem;color:var(--text-muted)}
 
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+    .card-title{margin:0 0 1rem;font-size:1rem;font-weight:650;display:flex;align-items:center;gap:.5rem}
+    .card-title::before{content:"";width:3px;height:1em;background:var(--accent);border-radius:2px}
 
-    .panel {
-      background: linear-gradient(135deg, #020617, #020617 40%, #020617 60%, #020617);
-      border-radius: clamp(12px, 2vw, 16px);
-      border: 1px solid rgba(148,163,184,0.3);
-      box-shadow: 0 18px 45px rgba(15,23,42,0.9), 0 0 0 1px rgba(15,23,42,0.9);
-      padding: clamp(14px, 2.5vw, 20px);
-      position: relative;
-      overflow: hidden;
+    .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem}
+    @media(max-width:480px){.field-grid{grid-template-columns:1fr}}
+
+    .field{display:flex;flex-direction:column;gap:.3rem}
+    .field label{font-size:.875rem;font-weight:600}
+
+    input[type="number"]{
+      width:100%;padding:.6rem .75rem;font:inherit;font-size:1rem;
+      color:var(--text);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+      transition:border-color .15s,box-shadow .15s;
     }
+    input:focus{outline:none;border-color:var(--border-focus);box-shadow:0 0 0 3px var(--accent-soft)}
 
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: -120px;
-      background:
-        radial-gradient(circle at 0 0, rgba(1,105,111,0.08), transparent 60%),
-        radial-gradient(circle at 100% 0, rgba(236,72,153,0.06), transparent 60%);
-      opacity: 0.75;
-      pointer-events: none;
+    .btn-row{display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.3rem;
+      padding:.55rem 1rem;font:inherit;font-size:.95rem;font-weight:600;
+      border:none;border-radius:var(--radius-sm);cursor:pointer;
+      transition:background .15s,transform .08s;
     }
+    .btn:active{transform:scale(.97)}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--accent-hover)}
+    .btn-secondary{background:var(--surface-2);border:1px solid var(--border);color:var(--text)}
 
-    .panel-header {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
+    .pill-stats{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.65rem}
+    .pill{font-size:.75rem;border-radius:999px;padding:.3rem .6rem;border:1px solid var(--border);background:var(--surface-2);color:var(--text-muted);white-space:nowrap}
+    .pill strong{color:var(--accent);font-weight:600}
+    .pill.ok strong{color:var(--accent)}
+    .pill.warn strong{color:var(--danger)}
 
-    .panel-header h1 {
-          margin: 0;
-          font-size: clamp(1rem, 3vw, 1.25rem);
-          letter-spacing: 0.03em;
-          text-transform: uppercase;
-          color: #e5e7eb;
-        }
+    .error{color:var(--danger);font-size:.85rem;margin-top:.5rem;padding:.5rem .75rem;background:var(--danger-soft);border-radius:var(--radius-sm);border:1px solid rgba(155,59,50,.2)}
 
-    .badge {
-      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(1,105,111,0.15);
-      color: var(--primary);
-      border: 1px solid rgba(1,105,111,0.6);
-      white-space: nowrap;
-    }
+    .table-wrap{border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-top:.5rem}
+    .table-header{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem .75rem;border-bottom:1px solid var(--border);gap:.5rem;flex-wrap:wrap}
+    .table-header-title{font-size:.85rem;font-weight:650;color:var(--text-muted)}
+    .table-header-meta{font-size:.75rem;color:var(--text-faint)}
+    .table-scroll{overflow:auto;-webkit-overflow-scrolling:touch;max-height:clamp(300px,50vh,480px)}
 
-    .subtext {
-      position: relative;
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      color: var(--text-muted);
-      margin-bottom: 14px;
-      line-height: 1.5;
-      word-break: break-all;
-    }
+    table{width:100%;border-collapse:collapse;font-size:.875rem;min-width:420px}
+    th,td{padding:.45rem .6rem;text-align:right;white-space:nowrap}
+    th{position:sticky;top:0;z-index:1;background:var(--surface);color:var(--text-muted);border-bottom:1px solid var(--border);font-size:.75rem;font-weight:600}
+    th:first-child,td:first-child{text-align:left}
+    tbody tr:nth-child(even){background:var(--surface-2)}
+    tr.highlight{background:var(--accent-soft) !important}
+    tr.highlight td{font-weight:500}
+    tr.highlight td:first-child::before{content:"★ ";color:var(--accent)}
 
-    .grid-2 {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(8px, 1.5vw, 14px);
-      margin-top: 4px;
-    }
+    .summary-footer{padding:.5rem .75rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-size:.75rem;color:var(--text-muted);flex-wrap:wrap}
+    .summary-footer .key{color:var(--accent)}
+    .summary-footer .value{color:var(--text);font-weight:600}
 
-    @media (max-width: 480px) {
-      .grid-2 { grid-template-columns: 1fr; }
-    }
+    .empty-state{font-size:.9rem;color:var(--text-muted);padding:1.5rem;text-align:center}
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    label {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    label span {
-      color: var(--primary);
-      font-size: 0.875rem;
-      margin-left: 4px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #020617;
-      border-radius: 999px;
-      padding: clamp(6px, 1.2vw, 10px) clamp(10px, 2vw, 14px);
-      border: 1px solid rgba(51,65,85,0.9);
-      min-height: 44px;
-    }
-
-    .input-wrapper:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(1,105,111,0.4);
-    }
-
-    .input-prefix {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      color: var(--text-muted);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    input[type="number"] {
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--text-main);
-      font-size: clamp(1rem, 2.5vw, 1.125rem);
-      padding: 4px 0;
-      min-width: 0;
-      font-family: inherit;
-    }
-
-    input[type="number"]::placeholder { color: #4b5563; }
-
-    .btn-row {
-      position: relative;
-      margin-top: 16px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary,
-    .btn-secondary {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: clamp(10px, 1.8vw, 12px) clamp(16px, 3vw, 20px);
-      font-size: clamp(1rem, 2.5vw, 1.125rem);
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-family: inherit;
-      min-height: 44px;
-      white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
-
-    .btn-primary {
-      color: #0f172a;
-      background: linear-gradient(135deg, #01696F, #0C4E54);
-      box-shadow: 0 12px 24px rgba(1,105,111,0.35), 0 0 0 1px rgba(15,23,42,0.8);
-    }
-
-    .btn-secondary {
-      color: var(--text-main);
-      background: rgba(51,65,85,0.6);
-      border: 1px solid rgba(148,163,184,0.3);
-    }
-
-    .btn-primary:hover,
-    .btn-secondary:hover {
-      filter: brightness(1.05);
-      transform: translateY(-0.5px);
-    }
-
-    .btn-primary:active,
-    .btn-secondary:active {
-      transform: translateY(0);
-      box-shadow: 0 8px 18px rgba(1,105,111,0.25), 0 0 0 1px rgba(15,23,42,0.8);
-    }
-
-    .pill-stats {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      gap: clamp(4px, 0.8vw, 6px);
-      margin-top: 12px;
-    }
-
-    .pill {
-      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-      border-radius: 999px;
-      padding: 5px 10px;
-      border: 1px solid rgba(148,163,184,0.4);
-      background: rgba(15,23,42,0.95);
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    .pill strong { color: var(--primary); font-weight: 600; }
-    .pill.ok strong { color: var(--success); }
-    .pill.warn strong { color: var(--accent); }
-
-    .panel-results { background: rgba(15,23,42,0.9); }
-
-    .table-wrap {
-      position: relative;
-      margin-top: 6px;
-      border-radius: 12px;
-      border: 1px solid rgba(31,41,55,0.9);
-      background: radial-gradient(circle at top, rgba(15,23,42,0.9), #020617);
-      max-height: clamp(360px, 60vh, 540px);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .table-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 8px 12px 6px;
-      border-bottom: 1px solid rgba(31,41,55,0.9);
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .table-header-title {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-    }
-
-    .table-header-meta {
-          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-          color: var(--text-muted);
-        }
-
-    .table-scroll {
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      flex: 1;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      min-width: 480px;
-    }
-
-    th, td {
-      padding: clamp(6px, 1vw, 8px) clamp(8px, 1.5vw, 10px);
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    th {
-          position: sticky;
-          top: 0;
-          z-index: 1;
-          background: #020617;
-          color: var(--text-muted);
-          border-bottom: 1px solid rgba(31,41,55,0.9);
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-        }
-
-    th:first-child, td:first-child { text-align: left; }
-
-    tbody tr:nth-child(even) { background: rgba(15,23,42,0.9); }
-    tbody tr:nth-child(odd) { background: rgba(2,6,23,0.95); }
-
-    tr.highlight { background: rgba(251,191,36,0.12) !important; }
-    tr.highlight td { color: #e5e7eb; font-weight: 500; }
-    tr.highlight td:first-child::before { content: "★ "; color: var(--accent); }
-
-    .summary-footer {
-      padding: 8px 12px 10px;
-      border-top: 1px solid rgba(31,41,55,0.9);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-
-    .summary-footer span.key { color: var(--primary); }
-    .summary-footer span.value { color: #e5e7eb; }
-    .summary-footer .hint { font-size: 0.75rem; opacity: 0.8; }
-
-    .empty-state {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      color: var(--text-muted);
-      padding: clamp(12px, 2vw, 20px);
-      text-align: center;
-    }
-
-    .error {
-      color: var(--danger);
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      margin-top: 8px;
-      padding: 8px 12px;
-      background: rgba(249,115,115,0.08);
-      border-radius: 8px;
-      border: 1px solid rgba(249,115,115,0.3);
-    }
-
-    @media (max-width: 480px) {
-      .btn-row { justify-content: stretch; }
-      .btn-row button { flex: 1; justify-content: center; }
+    @media print{
+      body{background:#fff}.btn{display:none}
+      .card,.table-wrap{box-shadow:none;border:1px solid #ccc}
+      input{border:none;padding:0;background:transparent}
+      th{background:#f0f0f0}
+      tr.highlight{background:#eee !important}
+      .empty-state{display:none}
     }
   </style>
 </head>
 <body>
-  <div class="app-shell">
+  <div class="app">
+    <header class="header">
+      <h1>龍骨佈局計算器</h1>
+      <p>輸入場地與地板參數，自動計算每條龍骨位置，標示板端接縫。</p>
+    </header>
 
-    <!-- Left: Controls -->
-    <div class="panel">
-      <div class="panel-header">
-        <h1>Joist Layout Calculator</h1>
-        <span class="badge">Formula Mode</span>
-      </div>
-      <div class="subtext">
-        center(m,k) = (segmentLength × k + edgeOffset) + m × (boardLength + gap)
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="lengthSite">Site length <span>(mm)</span></label>
-          <div class="input-wrapper">
-            <span class="input-prefix">L</span>
-            <input type="number" id="lengthSite" value="9005" min="100" step="1" inputmode="numeric" />
-          </div>
+    <section class="card" aria-labelledby="input-title">
+      <h2 class="card-title" id="input-title">輸入參數</h2>
+      <div class="field-grid">
+        <div class="field">
+          <label for="lengthSite">場地長度（毫米）</label>
+          <input type="number" id="lengthSite" value="9005" min="100" step="1" inputmode="numeric">
         </div>
-
-        <div class="form-group">
-          <label for="lengthBoard">Board length <span>(mm)</span></label>
-          <div class="input-wrapper">
-            <span class="input-prefix">B</span>
-            <input type="number" id="lengthBoard" value="3000" min="100" step="1" inputmode="numeric" />
-          </div>
+        <div class="field">
+          <label for="lengthBoard">地板長度（毫米）</label>
+          <input type="number" id="lengthBoard" value="3000" min="100" step="1" inputmode="numeric">
         </div>
-
-        <div class="form-group">
-          <label for="widthJoist">Joist width <span>(mm)</span></label>
-          <div class="input-wrapper">
-            <span class="input-prefix">W</span>
-            <input type="number" id="widthJoist" value="45" min="10" step="1" inputmode="numeric" />
-          </div>
+        <div class="field">
+          <label for="widthJoist">龍骨闊度（毫米）</label>
+          <input type="number" id="widthJoist" value="45" min="10" step="1" inputmode="numeric">
         </div>
-
-        <div class="form-group">
-          <label for="maxSpacing">Max spacing <span>(mm)</span></label>
-          <div class="input-wrapper">
-            <span class="input-prefix">≤</span>
-            <input type="number" id="maxSpacing" value="400" min="100" step="10" inputmode="numeric" />
-          </div>
+        <div class="field">
+          <label for="maxSpacing">最大間距（毫米）</label>
+          <input type="number" id="maxSpacing" value="400" min="100" step="10" inputmode="numeric">
         </div>
-
-        <div class="form-group">
-          <label for="edgeOffset">Edge offset <span>(mm)</span></label>
-          <div class="input-wrapper">
-            <span class="input-prefix">↔</span>
-            <input type="number" id="edgeOffset" value="5" min="0" step="1" inputmode="numeric" />
-          </div>
+        <div class="field">
+          <label for="edgeOffset">邊緣偏移（毫米）</label>
+          <input type="number" id="edgeOffset" value="5" min="0" step="1" inputmode="numeric">
         </div>
-
-        <div class="form-group">
-          <label for="boardGap">Board gap <span>(mm)</span></label>
-          <div class="input-wrapper">
-            <span class="input-prefix">␣</span>
-            <input type="number" id="boardGap" value="5" min="0" step="1" inputmode="numeric" />
-          </div>
+        <div class="field">
+          <label for="boardGap">板間隙（毫米）</label>
+          <input type="number" id="boardGap" value="5" min="0" step="1" inputmode="numeric">
         </div>
       </div>
-
       <div class="btn-row">
-        <button class="btn-secondary" onclick="copyCSV()" id="btnCopy" disabled>
-          <span>📋 Copy CSV</span>
-        </button>
-        <button class="btn-primary" onclick="calculate()">
-          <span>▶ Calculate</span>
-        </button>
+        <button class="btn btn-secondary" onclick="copyCSV()" id="btnCopy" disabled>📋 匯出 CSV</button>
+        <button class="btn btn-primary" onclick="calculate()">▶ 計算</button>
       </div>
-
       <div id="pillStats" class="pill-stats"></div>
       <div id="errorBox" class="error" style="display:none;"></div>
-    </div>
+    </section>
 
-    <!-- Right: Results -->
-    <div class="panel panel-results">
-      <div class="panel-header">
-        <div class="panel-header-title">Layout Table</div>
-      </div>
+    <section class="card" aria-labelledby="result-title">
+      <h2 class="card-title" id="result-title">龍骨佈局</h2>
       <div class="table-wrap">
         <div class="table-header">
-          <div class="table-header-title">Joist Positions</div>
-          <div class="table-header-meta" id="tableMeta">Press "Calculate" to generate</div>
+          <div class="table-header-title">龍骨位置表</div>
+          <div class="table-header-meta" id="tableMeta">請輸入參數後撳「計算」</div>
         </div>
         <div id="tableContainer" class="table-scroll">
-          <div class="empty-state">請喺左側輸入參數，撳「Calculate」生成龍骨佈局。</div>
+          <div class="empty-state">請在上方輸入參數，撳「計算」生成龍骨佈局。</div>
         </div>
         <div class="summary-footer">
-          <div>
-            <span class="key">★</span>
-            <span class="value"> Board Joint</span><br>
-            <span class="hint">joists near board ends highlighted</span>
-          </div>
+          <div><span class="key">★</span> <span class="value">板端接縫</span><br><span style="opacity:.7">靠近板端的龍骨已標示</span></div>
           <div id="footerInfo"></div>
         </div>
       </div>
-    </div>
-
+    </section>
   </div>
 
   <script>
     const MAX_BOARDS = 200;
-
     let lastRows = [];
-
     function $(id) { return document.getElementById(id); }
-
     function calculate() {
-      const lengthSite  = parseFloat($("lengthSite").value);
-      const lengthBoard = parseFloat($("lengthBoard").value);
-      const widthJoist  = parseFloat($("widthJoist").value);
-      const maxSpacing  = parseFloat($("maxSpacing").value);
-      const edgeOffset  = parseFloat($("edgeOffset").value);
-      const boardGap    = parseFloat($("boardGap").value);
-
-      const errorBox    = $("errorBox");
-      const pillStats   = $("pillStats");
-      const tableMeta   = $("tableMeta");
-      const tableContainer = $("tableContainer");
-      const footerInfo  = $("footerInfo");
-      const btnCopy     = $("btnCopy");
-
-      errorBox.style.display = "none";
-      errorBox.textContent = "";
-      pillStats.innerHTML = "";
-      footerInfo.textContent = "";
-      btnCopy.disabled = true;
-      lastRows = [];
-
-      const inputs = [lengthSite, lengthBoard, widthJoist, maxSpacing, edgeOffset, boardGap];
-      if (inputs.some(v => isNaN(v) || v < 0)) {
-        showError("請輸入所有欄位嘅有效數值（≥ 0）。");
-        tableContainer.innerHTML = "<div class='empty-state'>輸入不完整。</div>";
-        tableMeta.textContent = "Invalid input";
-        return;
-      }
-
-      if (lengthSite <= 0 || lengthBoard <= 0 || widthJoist <= 0 || maxSpacing <= 0) {
-        showError("L / B / W / Max spacing 必須大於 0。");
-        tableContainer.innerHTML = "<div class='empty-state'>參數必須為正數。</div>";
-        tableMeta.textContent = "Invalid input";
-        return;
-      }
-
-      if (widthJoist >= lengthBoard) {
-        showError("Joist width 不能大於或等於 floorboard length。");
-        tableContainer.innerHTML = "<div class='empty-state'>龍骨闊度異常。</div>";
-        tableMeta.textContent = "Invalid config";
-        return;
-      }
-
-      const nSeg = Math.ceil(lengthBoard / maxSpacing);
-      const segmentLength = lengthBoard / nSeg;
+      const L = parseFloat($("lengthSite").value);
+      const B = parseFloat($("lengthBoard").value);
+      const W = parseFloat($("widthJoist").value);
+      const S = parseFloat($("maxSpacing").value);
+      const E = parseFloat($("edgeOffset").value);
+      const G = parseFloat($("boardGap").value);
+      const err = $("errorBox"), ps = $("pillStats"), tm = $("tableMeta"), tc = $("tableContainer"), fi = $("footerInfo"), bc = $("btnCopy");
+      err.style.display = "none"; err.textContent = ""; ps.innerHTML = ""; fi.textContent = ""; bc.disabled = true; lastRows = [];
+      if ([L,B,W,S,E,G].some(v => isNaN(v) || v < 0)) { err.style.display="block"; err.textContent="請輸入所有欄位嘅有效數值（≥ 0）。"; tc.innerHTML="<div class='empty-state'>輸入不完整。</div>"; tm.textContent="Invalid input"; return; }
+      if (L <= 0 || B <= 0 || W <= 0 || S <= 0) { err.style.display="block"; err.textContent="L / B / W / Max spacing 必須大於 0。"; tc.innerHTML="<div class='empty-state'>參數必須為正數。</div>"; tm.textContent="Invalid input"; return; }
+      if (W >= B) { err.style.display="block"; err.textContent="龍骨闊度不能大於或等於地板長度。"; tc.innerHTML="<div class='empty-state'>龍骨闊度異常。</div>"; tm.textContent="Invalid config"; return; }
+      const nSeg = Math.ceil(B / S), segLen = B / nSeg;
       const rows = [];
-
       let m = 0;
       while (m < MAX_BOARDS) {
-        const blockOffset = m * (lengthBoard + boardGap);
-        if (blockOffset > lengthSite + 1e-9) break;
-
+        const bo = m * (B + G); if (bo > L + 1e-9) break;
         for (let k = 0; k < nSeg; k++) {
-          const center = (segmentLength * k + edgeOffset) + blockOffset;
-          const left   = center - widthJoist / 2;
-          const right  = center + widthJoist / 2;
-
-          if (left > lengthSite + 1e-9) break;
-
-          const boardEnd = (m + 1) * lengthBoard + m * boardGap + boardGap;
-          const isJoint = Math.abs(center - boardEnd) < segmentLength * 0.55;
-
-          rows.push({
-            boardIndex: m,
-            segIndex: k,
-            number: rows.length + 1,
-            left: left.toFixed(2),
-            center: center.toFixed(2),
-            right: right.toFixed(2),
-            isJoint,
-          });
+          const center = segLen * k + E + bo, left = center - W / 2, right = center + W / 2;
+          if (left > L + 1e-9) break;
+          const be = (m + 1) * B + m * G + G;
+          rows.push({ boardIndex: m, segIndex: k, number: rows.length + 1, left: left.toFixed(2), center: center.toFixed(2), right: right.toFixed(2), isJoint: Math.abs(center - be) < segLen * 0.55 });
         }
         m++;
       }
-
-      if (m >= MAX_BOARDS) {
-        showError("超過最大 board 數量上限（" + MAX_BOARDS + "），請檢查參數。");
-      }
-
-      if (!rows.length) {
-        tableContainer.innerHTML = "<div class='empty-state'>場地長度不足以放置任何龍骨。</div>";
-        tableMeta.textContent = "No joists";
-        return;
-      }
-
-      lastRows = rows;
-      renderTable(rows);
-      tableMeta.textContent = rows.length + " joists · " + m + " boards";
-
-      const spacingOk = segmentLength <= maxSpacing + 1e-9;
-      const jointCount = rows.filter(r => r.isJoint).length;
-
-      pillStats.innerHTML =
-        '<div class="pill ' + (spacingOk ? "ok" : "warn") + '">' +
-          '<span>Segment</span> <strong>' + segmentLength.toFixed(1) + ' mm</strong> (n=' + nSeg + ')' +
-        '</div>' +
-        '<div class="pill">' +
-          '<span>Max</span> <strong>' + maxSpacing.toFixed(0) + ' mm</strong>' +
-        '</div>' +
-        '<div class="pill">' +
-          '<span>Joists</span> <strong>' + rows.length + '</strong>' +
-        '</div>' +
-        '<div class="pill">' +
-          '<span>Boards</span> <strong>' + m + '</strong>' +
-        '</div>' +
-        '<div class="pill">' +
-          '<span>Joints ★</span> <strong>' + jointCount + '</strong>' +
-        '</div>';
-
-      footerInfo.innerHTML =
-        '<span class="key">Segment</span> ' +
-        '<span class="value">' + segmentLength.toFixed(2) + ' mm</span>';
-
-      btnCopy.disabled = false;
+      if (m >= MAX_BOARDS) { err.style.display="block"; err.textContent="超過最大板數上限（"+MAX_BOARDS+"），請檢查參數。"; }
+      if (!rows.length) { tc.innerHTML="<div class='empty-state'>場地長度不足以放置任何龍骨。</div>"; tm.textContent="No joists"; return; }
+      lastRows = rows; renderTable(rows); tm.textContent = rows.length + " 條龍骨 · " + m + " 塊板";
+      const ok = segLen <= S + 1e-9, jc = rows.filter(r=>r.isJoint).length;
+      ps.innerHTML = '<div class="pill '+(ok?"ok":"warn")+'"><strong>'+segLen.toFixed(1)+' mm</strong> ('+nSeg+' 段)</div>'+'<div class="pill"><strong>'+S.toFixed(0)+' mm</strong></div>'+'<div class="pill"><strong>'+rows.length+'</strong> 條</div>'+'<div class="pill"><strong>'+m+'</strong> 塊</div>'+'<div class="pill"><strong>★ '+jc+'</strong></div>';
+      fi.innerHTML = '<span class="key">段長</span> <span class="value">'+segLen.toFixed(2)+' mm</span>';
+      bc.disabled = false;
     }
-
     function renderTable(rows) {
-      const tbody = rows.map(function(r) {
-        return '<tr class="' + (r.isJoint ? "highlight" : "") + '">' +
-          '<td>' + r.number + '</td>' +
-          '<td>' + r.boardIndex + '</td>' +
-          '<td>' + r.segIndex + '</td>' +
-          '<td>' + r.left + '</td>' +
-          '<td>' + r.center + '</td>' +
-          '<td>' + r.right + '</td>' +
-        '</tr>';
-      }).join("");
-
-      $("tableContainer").innerHTML =
-        '<table>' +
-          '<thead><tr>' +
-            '<th>Joist #</th>' +
-            '<th>Board #</th>' +
-            '<th>Seg #</th>' +
-            '<th>Left (mm)</th>' +
-            '<th>Center (mm)</th>' +
-            '<th>Right (mm)</th>' +
-          '</tr></thead>' +
-          '<tbody>' + tbody + '</tbody>' +
-        '</table>';
+      const th = rows.map(r=>'<tr class="'+(r.isJoint?"highlight":"")+'"><td>'+r.number+'</td><td>'+r.boardIndex+'</td><td>'+r.segIndex+'</td><td>'+r.left+'</td><td>'+r.center+'</td><td>'+r.right+'</td></tr>').join("");
+      $("tableContainer").innerHTML = '<table><thead><tr><th>龍骨 #</th><th>板 #</th><th>段 #</th><th>左 （毫米）</th><th>中心 （毫米）</th><th>右 （毫米）</th></tr></thead><tbody>'+th+'</tbody></table>';
     }
-
-    function showError(msg) {
-      const box = $("errorBox");
-      box.style.display = "block";
-      box.textContent = msg;
-    }
-
     function copyCSV() {
       if (!lastRows.length) return;
-      const header = "Joist #,Board #,Seg #,Left (mm),Center (mm),Right (mm),Joint";
-      const lines = lastRows.map(function(r) {
-        return [r.number, r.boardIndex, r.segIndex, r.left, r.center, r.right, r.isJoint ? "★" : ""].join(",");
-      });
-      const csv = header + "\n" + lines.join("\n");
-
+      const csv = "Joist #,Board #,Seg #,Left (mm),Center (mm),Right (mm),Joint\n" + lastRows.map(r=>[r.number,r.boardIndex,r.segIndex,r.left,r.center,r.right,r.isJoint?"★":""].join(",")).join("\n");
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(csv).then(function() {
-          const btn = $("btnCopy");
-          const orig = btn.innerHTML;
-          btn.innerHTML = "<span>✅ Copied!</span>";
-          setTimeout(function() { btn.innerHTML = orig; }, 1500);
-        }).catch(function() {
-          fallbackCopy(csv);
-        });
-      } else {
-        fallbackCopy(csv);
-      }
+        navigator.clipboard.writeText(csv).then(()=>{ const o=$("btnCopy").innerHTML; $("btnCopy").innerHTML="✅ 已複製！"; setTimeout(()=>{$("btnCopy").innerHTML=o;},1500); }).catch(()=>fc(csv));
+      } else fc(csv);
     }
-
-    function fallbackCopy(text) {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      ta.style.top = "-9999px";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      try {
-        document.execCommand("copy");
-        const btn = $("btnCopy");
-        btn.innerHTML = "<span>✅ Copied!</span>";
-        setTimeout(function() { btn.innerHTML = "<span>📋 Copy CSV</span>"; }, 1500);
-      } catch (e) {
-        alert("Copy failed. Please select and copy manually.");
-      }
+    function fc(t) {
+      const ta=document.createElement("textarea"); ta.value=t; ta.style.cssText="position:fixed;left:-9999px;top:-9999px";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand("copy"); $("btnCopy").innerHTML="✅ 已複製！"; setTimeout(()=>{$("btnCopy").innerHTML="📋 匯出 CSV";},1500); } catch(e) { alert("複製失敗，請手動選取複製。"); }
       document.body.removeChild(ta);
     }
-
     window.addEventListener("DOMContentLoaded", calculate);
   </script>
 </body>
