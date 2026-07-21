@@ -72,15 +72,15 @@
     }
 
     .panel-header h1 {
-      margin: 0;
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
+          margin: 0;
+          font-size: clamp(1rem, 3vw, 1.25rem);
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: #e5e7eb;
+        }
 
     .badge {
-      font-size: clamp(0.65rem, 1.5vw, 0.7rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;
       padding: 4px 10px;
@@ -93,7 +93,7 @@
 
     .subtext {
       position: relative;
-      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       margin-bottom: 14px;
       line-height: 1.5;
@@ -119,7 +119,7 @@
     }
 
     label {
-      font-size: clamp(0.7rem, 1.6vw, 0.78rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -127,7 +127,7 @@
 
     label span {
       color: var(--primary);
-      font-size: 0.7rem;
+      font-size: 0.875rem;
       margin-left: 4px;
     }
 
@@ -148,7 +148,7 @@
     }
 
     .input-prefix {
-      font-size: clamp(0.75rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       white-space: nowrap;
       flex-shrink: 0;
@@ -160,7 +160,7 @@
       outline: none;
       background: transparent;
       color: var(--text-main);
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
       padding: 4px 0;
       min-width: 0;
       font-family: inherit;
@@ -184,7 +184,7 @@
       align-items: center;
       gap: 8px;
       padding: clamp(10px, 1.8vw, 12px) clamp(16px, 3vw, 20px);
-      font-size: clamp(0.8rem, 1.8vw, 0.85rem);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
       border-radius: 999px;
       border: none;
       cursor: pointer;
@@ -230,7 +230,7 @@
     }
 
     .pill {
-      font-size: clamp(0.68rem, 1.5vw, 0.75rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       border-radius: 999px;
       padding: 5px 10px;
       border: 1px solid rgba(148,163,184,0.4);
@@ -268,16 +268,16 @@
     }
 
     .table-header-title {
-      font-size: clamp(0.72rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: var(--text-muted);
     }
 
     .table-header-meta {
-      font-size: clamp(0.65rem, 1.4vw, 0.72rem);
-      color: var(--text-muted);
-    }
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+          color: var(--text-muted);
+        }
 
     .table-scroll {
       overflow: auto;
@@ -288,7 +288,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: clamp(0.7rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       min-width: 480px;
     }
 
@@ -299,16 +299,16 @@
     }
 
     th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: #020617;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(31,41,55,0.9);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: clamp(0.65rem, 1.4vw, 0.72rem);
-    }
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background: #020617;
+          color: var(--text-muted);
+          border-bottom: 1px solid rgba(31,41,55,0.9);
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+        }
 
     th:first-child, td:first-child { text-align: left; }
 
@@ -326,17 +326,17 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      font-size: clamp(0.68rem, 1.4vw, 0.75rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       color: var(--text-muted);
       flex-wrap: wrap;
     }
 
     .summary-footer span.key { color: var(--primary); }
     .summary-footer span.value { color: #e5e7eb; }
-    .summary-footer .hint { font-size: 0.7rem; opacity: 0.8; }
+    .summary-footer .hint { font-size: 0.75rem; opacity: 0.8; }
 
     .empty-state {
-      font-size: clamp(0.75rem, 1.6vw, 0.82rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       padding: clamp(12px, 2vw, 20px);
       text-align: center;
@@ -344,7 +344,7 @@
 
     .error {
       color: var(--danger);
-      font-size: clamp(0.72rem, 1.5vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       margin-top: 8px;
       padding: 8px 12px;
       background: rgba(249,115,115,0.08);
