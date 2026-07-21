@@ -7,8 +7,8 @@
   <style>
     :root {
       --bg: #0f172a;
-      --primary: #38bdf8;
-      --primary-soft: rgba(56,189,248,0.15);
+      --primary: #01696F;
+      --primary-soft: rgba(1,105,111,0.15);
       --accent: #fbbf24;
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
@@ -21,7 +21,7 @@
 
     body {
       margin: 0;
-      padding: clamp(12px, 3vw, 24px);
+      padding: clamp(1rem, 4vw, 2rem);
       background: radial-gradient(circle at top, #1f2937, #020617);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text-main);
@@ -29,16 +29,11 @@
     }
 
     .app-shell {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
-      gap: clamp(12px, 2vw, 20px);
-    }
+          max-width: 480px;
+          margin: 0 auto;
+        }
 
-    @media (max-width: 860px) {
-      .app-shell { grid-template-columns: 1fr; }
-    }
+
 
     .panel {
       background: linear-gradient(135deg, #020617, #020617 40%, #020617 60%, #020617);
@@ -55,7 +50,7 @@
       position: absolute;
       inset: -120px;
       background:
-        radial-gradient(circle at 0 0, rgba(56,189,248,0.08), transparent 60%),
+        radial-gradient(circle at 0 0, rgba(1,105,111,0.08), transparent 60%),
         radial-gradient(circle at 100% 0, rgba(236,72,153,0.06), transparent 60%);
       opacity: 0.75;
       pointer-events: none;
@@ -72,28 +67,28 @@
     }
 
     .panel-header h1 {
-      margin: 0;
-      font-size: clamp(0.9rem, 2.5vw, 1.05rem);
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
+          margin: 0;
+          font-size: clamp(1rem, 3vw, 1.25rem);
+          letter-spacing: 0.03em;
+          text-transform: uppercase;
+          color: #e5e7eb;
+        }
 
     .badge {
-      font-size: clamp(0.65rem, 1.5vw, 0.7rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;
       padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(56,189,248,0.15);
+      background: rgba(1,105,111,0.15);
       color: var(--primary);
-      border: 1px solid rgba(56,189,248,0.6);
+      border: 1px solid rgba(1,105,111,0.6);
       white-space: nowrap;
     }
 
     .subtext {
       position: relative;
-      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       margin-bottom: 14px;
       line-height: 1.5;
@@ -119,7 +114,7 @@
     }
 
     label {
-      font-size: clamp(0.7rem, 1.6vw, 0.78rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -127,7 +122,7 @@
 
     label span {
       color: var(--primary);
-      font-size: 0.7rem;
+      font-size: 0.875rem;
       margin-left: 4px;
     }
 
@@ -144,11 +139,11 @@
 
     .input-wrapper:focus-within {
       border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(56,189,248,0.4);
+      box-shadow: 0 0 0 1px rgba(1,105,111,0.4);
     }
 
     .input-prefix {
-      font-size: clamp(0.75rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       white-space: nowrap;
       flex-shrink: 0;
@@ -160,7 +155,7 @@
       outline: none;
       background: transparent;
       color: var(--text-main);
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
       padding: 4px 0;
       min-width: 0;
       font-family: inherit;
@@ -184,7 +179,7 @@
       align-items: center;
       gap: 8px;
       padding: clamp(10px, 1.8vw, 12px) clamp(16px, 3vw, 20px);
-      font-size: clamp(0.8rem, 1.8vw, 0.85rem);
+      font-size: clamp(1rem, 2.5vw, 1.125rem);
       border-radius: 999px;
       border: none;
       cursor: pointer;
@@ -199,8 +194,8 @@
 
     .btn-primary {
       color: #0f172a;
-      background: linear-gradient(135deg, #38bdf8, #22c55e);
-      box-shadow: 0 12px 24px rgba(34,197,94,0.35), 0 0 0 1px rgba(15,23,42,0.8);
+      background: linear-gradient(135deg, #01696F, #0C4E54);
+      box-shadow: 0 12px 24px rgba(1,105,111,0.35), 0 0 0 1px rgba(15,23,42,0.8);
     }
 
     .btn-secondary {
@@ -218,7 +213,7 @@
     .btn-primary:active,
     .btn-secondary:active {
       transform: translateY(0);
-      box-shadow: 0 8px 18px rgba(34,197,94,0.25), 0 0 0 1px rgba(15,23,42,0.8);
+      box-shadow: 0 8px 18px rgba(1,105,111,0.25), 0 0 0 1px rgba(15,23,42,0.8);
     }
 
     .pill-stats {
@@ -230,7 +225,7 @@
     }
 
     .pill {
-      font-size: clamp(0.68rem, 1.5vw, 0.75rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       border-radius: 999px;
       padding: 5px 10px;
       border: 1px solid rgba(148,163,184,0.4);
@@ -268,16 +263,16 @@
     }
 
     .table-header-title {
-      font-size: clamp(0.72rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;
       color: var(--text-muted);
     }
 
     .table-header-meta {
-      font-size: clamp(0.65rem, 1.4vw, 0.72rem);
-      color: var(--text-muted);
-    }
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+          color: var(--text-muted);
+        }
 
     .table-scroll {
       overflow: auto;
@@ -288,7 +283,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: clamp(0.7rem, 1.6vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       min-width: 480px;
     }
 
@@ -299,16 +294,16 @@
     }
 
     th {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background: #020617;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(31,41,55,0.9);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-size: clamp(0.65rem, 1.4vw, 0.72rem);
-    }
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background: #020617;
+          color: var(--text-muted);
+          border-bottom: 1px solid rgba(31,41,55,0.9);
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+        }
 
     th:first-child, td:first-child { text-align: left; }
 
@@ -326,17 +321,17 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      font-size: clamp(0.68rem, 1.4vw, 0.75rem);
+      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
       color: var(--text-muted);
       flex-wrap: wrap;
     }
 
     .summary-footer span.key { color: var(--primary); }
     .summary-footer span.value { color: #e5e7eb; }
-    .summary-footer .hint { font-size: 0.7rem; opacity: 0.8; }
+    .summary-footer .hint { font-size: 0.75rem; opacity: 0.8; }
 
     .empty-state {
-      font-size: clamp(0.75rem, 1.6vw, 0.82rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       color: var(--text-muted);
       padding: clamp(12px, 2vw, 20px);
       text-align: center;
@@ -344,7 +339,7 @@
 
     .error {
       color: var(--danger);
-      font-size: clamp(0.72rem, 1.5vw, 0.8rem);
+      font-size: clamp(0.875rem, 2vw, 1rem);
       margin-top: 8px;
       padding: 8px 12px;
       background: rgba(249,115,115,0.08);
